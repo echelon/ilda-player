@@ -1,0 +1,22 @@
+[package]
+  name = "ilda-player"
+  version = "0.0.1"
+  authors = [ "Brandon Thomas <bt@brand.io>", "Brandon Thomas <echelon@gmail.com>" ]
+  description = "A program to play ILDA files."
+  keywords = [ "laser", "projector", "ILDA", "DAC", "hardware" ]
+  license = "BSD-4-Clause"
+  readme = "README.md"
+  repository = "https://github.com/echelon/ilda-player"
+  documentation = "https://docs.rs/ilda-player"
+
+[[bin]]
+  name = "ilda-player"
+
+[dependencies]
+  argparse = "0.2.*"
+  ilda = "0.0.6"
+  lase = "0.0.1"
+
+[badges]
+  travis-ci = { repository = "echelon/ilda-player" }
+
