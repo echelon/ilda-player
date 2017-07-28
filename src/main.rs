@@ -73,11 +73,11 @@ fn main() {
       current_point += 1;
 
       if point.is_blank && !show_blanking {
-        buf.push(Point::xy_blank(point.x, point.y));
+        buf.push(Point::xy_blank(invert_x(point.x), point.y));
       } else {
         // The DAC supports a wider colorspace than ILDA.
         buf.push(Point::xy_rgb(
-          point.x,
+          invert_x(point.x),
           point.y,
           expand(point.r),
           expand(point.g),
@@ -87,6 +87,12 @@ fn main() {
 
     buf
   }).expect("Streaming to the DAC is broken.");
+}
+
+fn invert_x(x_coordinate: i16) -> i16 {
+  // Compensate for flipped x-coordinate plane.
+  // TODO: This might be a bug in the ILDA parser, or perhaps Etherdream.rs.
+  x_coordinate * -1
 }
 
 fn expand(color: u8) -> u16 {
