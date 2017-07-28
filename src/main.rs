@@ -17,17 +17,21 @@ use ilda::animation::Animation;
 use lase::Point;
 use lase::tools::find_first_etherdream_dac;
 use argparse::ArgumentParser;
-use argparse::Store;
+use argparse::{Store, StoreTrue};
 
 fn main() {
   let mut filename = String::new();
+  let mut show_blanking = false;
 
-  // Limit scope of borrow.
-  {
+  { // Limit scope of borrow.
     let mut parser = ArgumentParser::new();
+
     parser.set_description("ILDA laser projection file player.");
     parser.refer(&mut filename)
         .add_argument("filename", Store, "ILDA file to load");
+    parser.refer(&mut show_blanking)
+        .add_option(&["-b", "--show-blanking"], StoreTrue,
+            "Show the blanking points");
 
     parser.parse_args_or_exit();
   }
@@ -37,6 +41,7 @@ fn main() {
   let animation = Animation::read_file(&filename).expect("File should load.");
 
   println!("Searching for EtherDream DAC...");
+
   let mut dac = find_first_etherdream_dac().expect("Unable to find DAC");
 
   let mut current_frame = 0;
@@ -67,13 +72,17 @@ fn main() {
 
       current_point += 1;
 
-      // The DAC supports a wider colorspace than ILDA.
-      buf.push(Point::xy_rgb(
-        point.x,
-        point.y,
-        expand(point.r),
-        expand(point.g),
-        expand(point.b)));
+      if point.is_blank && !show_blanking {
+        buf.push(Point::xy_blank(point.x, point.y));
+      } else {
+        // The DAC supports a wider colorspace than ILDA.
+        buf.push(Point::xy_rgb(
+          point.x,
+          point.y,
+          expand(point.r),
+          expand(point.g),
+          expand(point.b)));
+      }
     }
 
     buf
