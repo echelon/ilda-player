@@ -22,6 +22,7 @@ use argparse::{Store, StoreTrue};
 fn main() {
   let mut filename = String::new();
   let mut show_blanking = false;
+  let mut frame_repeat_number = 0u8;
 
   { // Limit scope of borrow.
     let mut parser = ArgumentParser::new();
@@ -32,9 +33,14 @@ fn main() {
     parser.refer(&mut show_blanking)
         .add_option(&["-b", "--show-blanking"], StoreTrue,
             "Show the blanking points");
+    parser.refer(&mut frame_repeat_number)
+        .add_option(&["-r", "--repeat-frames"], Store,
+            "Number of times to repeat frames");
 
     parser.parse_args_or_exit();
   }
+
+  let repeat_frames = frame_repeat_number != 0;
 
   println!("Reading ILDA file... {}", filename);
 
@@ -46,6 +52,7 @@ fn main() {
 
   let mut current_frame = 0;
   let mut current_point = 0;
+  let mut frame_repeat_count = 0;
 
   dac.play_function(move |num_points: u16| {
     let num_points = num_points as usize;
@@ -55,8 +62,10 @@ fn main() {
       let frame = match animation.get_frame(current_frame) {
         Some(frame) => frame,
         None => {
+          // End of animation
           current_frame = 0;
           current_point = 0;
+          frame_repeat_count = 0;
           continue;
         }
       };
@@ -64,8 +73,15 @@ fn main() {
       let point = match frame.get_point(current_point) {
         Some(point) => point,
         None => {
+          // End of frame
+          if repeat_frames && frame_repeat_count < frame_repeat_number {
+            current_point = 0;
+            frame_repeat_count += 1;
+            continue;
+          }
           current_frame += 1;
           current_point = 0;
+          frame_repeat_count = 0;
           continue;
         },
       };
