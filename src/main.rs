@@ -92,7 +92,7 @@ fn main() {
 fn invert_x(x_coordinate: i16) -> i16 {
   // Compensate for flipped x-coordinate plane.
   // TODO: This might be a bug in the ILDA parser, or perhaps Etherdream.rs.
-  x_coordinate * -1
+  x_coordinate.saturating_mul(-1)
 }
 
 fn expand(color: u8) -> u16 {
