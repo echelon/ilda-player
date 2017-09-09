@@ -91,7 +91,7 @@ fn main() {
 
       current_point += 1;
 
-      let mut simple_point = if point.is_blank && !show_blanking {
+      let simple_point = if point.is_blank && !show_blanking {
         SimplePoint::xy_blank(invert_x(point.x), point.y)
       } else {
         // The DAC supports a wider colorspace than ILDA.
@@ -103,22 +103,24 @@ fn main() {
           expand(point.b))
       };
 
-      let x = simple_point.x as f32;
-      let y = simple_point.y as f32;
+      let mut pipeline_point = simple_point.into_pipeline_pt();
+
       let rot = 1.0f32;
+      z_rotate(&mut pipeline_point, rot);
 
-      let xx = x * rot.cos() - y * rot.sin();
-      let yy = y * rot.cos() + x * rot.sin();
-
-      simple_point.x = xx as i16;
-      simple_point.y = yy as i16;
-
-      let dac_point = simple_to_dac(&simple_point);
+      let dac_point = pipeline_to_dac(&pipeline_point);
       buf.push(dac_point);
     }
 
     buf
   }).expect("Streaming to the DAC is broken.");
+}
+
+fn z_rotate(point: &mut PipelinePoint, theta: f32) {
+  let x = point.x * theta.cos() - point.y * theta.sin();
+  let y = point.y * theta.cos() + point.x * theta.sin();
+  point.x = x;
+  point.y = y;
 }
 
 fn invert_x(x_coordinate: i16) -> i16 {
