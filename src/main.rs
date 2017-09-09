@@ -12,12 +12,15 @@
 extern crate argparse;
 extern crate ilda;
 extern crate lase;
+extern crate point;
 
+use argparse::ArgumentParser;
+use argparse::{Store, StoreTrue};
 use ilda::animation::Animation;
 use lase::Point;
 use lase::tools::find_first_etherdream_dac;
-use argparse::ArgumentParser;
-use argparse::{Store, StoreTrue};
+use point::PipelinePoint;
+use point::SimplePoint;
 
 fn main() {
   let mut filename = String::new();
@@ -88,17 +91,30 @@ fn main() {
 
       current_point += 1;
 
-      if point.is_blank && !show_blanking {
-        buf.push(Point::xy_blank(invert_x(point.x), point.y));
+      let mut simple_point = if point.is_blank && !show_blanking {
+        SimplePoint::xy_blank(invert_x(point.x), point.y)
       } else {
         // The DAC supports a wider colorspace than ILDA.
-        buf.push(Point::xy_rgb(
+        SimplePoint::xy_rgb(
           invert_x(point.x),
           point.y,
           expand(point.r),
           expand(point.g),
-          expand(point.b)));
-      }
+          expand(point.b))
+      };
+
+      let x = simple_point.x as f32;
+      let y = simple_point.y as f32;
+      let rot = 1.0f32;
+
+      let xx = x * rot.cos() - y * rot.sin();
+      let yy = y * rot.cos() + x * rot.sin();
+
+      simple_point.x = xx as i16;
+      simple_point.y = yy as i16;
+
+      let dac_point = simple_to_dac(&simple_point);
+      buf.push(dac_point);
     }
 
     buf
@@ -113,4 +129,19 @@ fn invert_x(x_coordinate: i16) -> i16 {
 
 fn expand(color: u8) -> u16 {
   (color as u16) * 257 // or the incorrect: (color as u16) << 8
+}
+
+// TODO: Move this functionality into lase.rs, etherdream.rs, and point.rs.
+fn simple_to_dac(point: &SimplePoint) -> Point {
+  if point.is_blank {
+    Point::xy_blank(point.x, point.y)
+  } else {
+    Point::xy_rgb(point.x, point.y, point.r, point.g, point.b)
+  }
+}
+
+// TODO: Move this functionality into lase.rs, etherdream.rs, and point.rs.
+fn pipeline_to_dac(point: &PipelinePoint) -> Point {
+  let point = point.into_simple_pt();
+  simple_to_dac(&point)
 }

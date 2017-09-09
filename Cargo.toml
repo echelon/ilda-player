@@ -14,8 +14,10 @@
 
 [dependencies]
   argparse = "0.2.*"
+  beam = "0.1"
   ilda = "0.0.6"
   lase = "0.0.1"
+  point = "0.2"
 
 [badges]
   travis-ci = { repository = "echelon/ilda-player" }

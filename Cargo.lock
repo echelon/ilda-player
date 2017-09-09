@@ -1,15 +1,22 @@
 [root]
 name = "ilda-player"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "argparse 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "beam 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "ilda 0.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "lase 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "point 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "argparse"
 version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "beam"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -89,6 +96,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "point"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "winapi"
 version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -109,6 +121,7 @@ dependencies = [
 
 [metadata]
 "checksum argparse 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "37bb99f5e39ee8b23b6e227f5b8f024207e8616f44aa4b8c76ecd828011667ef"
+"checksum beam 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "22f80f81555cf2ab0e0df10a7cb393b9087dfbcda9143f68bc98c4a9fd3642a8"
 "checksum byteorder 0.5.3 (registry+https://github.com/rust-lang/crates.io-index)" = "0fc10e8cc6b2580fda3f36eb6dc5316657f812a3df879a44a66fc9f0fdbc4855"
 "checksum cfg-if 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d4c819a1287eb618df47cc647173c5c4c66ba19d888a6e50d605672aed3140de"
 "checksum etherdream 0.0.7 (registry+https://github.com/rust-lang/crates.io-index)" = "a5cf54ce8512fdcca37fd684e53cd5926ffeca634580f3acbb1529f8c20ad77e"
@@ -119,6 +132,7 @@ dependencies = [
 "checksum libc 0.2.28 (registry+https://github.com/rust-lang/crates.io-index)" = "bb7b49972ee23d8aa1026c365a5b440ba08e35075f18c459980c7395c221ec48"
 "checksum log 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)" = "880f77541efa6e5cc74e76910c9884d9859683118839d6a1dc3b11e63512565b"
 "checksum net2 0.2.30 (registry+https://github.com/rust-lang/crates.io-index)" = "94101fd932816f97eb9a5116f6c1a11511a1fed7db21c5ccd823b2dc11abf566"
+"checksum point 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "3cac69999983e4c5b2c85c5557b0907c70e1ddb5dbf545970ead5f012d3d44a5"
 "checksum winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)" = "167dc9d6949a9b857f3451275e911c3f44255842c1f7a76f33c55103a909087a"
 "checksum winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "2d315eee3b34aca4797b2da6b13ed88266e6d612562a0c46390af8299fc699bc"
 "checksum ws2_32-sys 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "d59cefebd0c892fa2dd6de581e937301d8552cb44489cdff035c6187cb63fa5e"
