@@ -13,6 +13,7 @@ extern crate argparse;
 extern crate ilda;
 extern crate lase;
 extern crate point;
+extern crate time;
 
 use argparse::ArgumentParser;
 use argparse::{Store, StoreTrue};
@@ -21,6 +22,7 @@ use lase::Point;
 use lase::tools::find_first_etherdream_dac;
 use point::PipelinePoint;
 use point::SimplePoint;
+use std::f32::consts::PI;
 
 fn main() {
   let mut filename = String::new();
@@ -105,7 +107,7 @@ fn main() {
 
       let mut pipeline_point = simple_point.into_pipeline_pt();
 
-      let rot = 1.0f32;
+      let rot = get_rotation();
       z_rotate(&mut pipeline_point, rot);
 
       let dac_point = pipeline_to_dac(&pipeline_point);
@@ -121,6 +123,15 @@ fn z_rotate(point: &mut PipelinePoint, theta: f32) {
   let y = point.y * theta.cos() + point.x * theta.sin();
   point.x = x;
   point.y = y;
+}
+
+fn get_rotation() -> f32 {
+  const TWO_PI: f32 = PI * 2.0f32;
+
+  let now = time::now();
+  let second_fraction = now.tm_nsec as f32 / 1_000_000_000.0;
+
+  second_fraction * TWO_PI
 }
 
 fn invert_x(x_coordinate: i16) -> i16 {
