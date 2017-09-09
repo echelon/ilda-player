@@ -107,11 +107,11 @@ fn main() {
 
       let mut pipeline_point = simple_point.into_pipeline_pt();
 
-      let rot = get_rotation();
+      let rot = get_rotation(4);
 
       //x_rotate(&mut pipeline_point, rot);
-      //y_rotate(&mut pipeline_point, rot);
-      z_rotate(&mut pipeline_point, rot);
+      y_rotate(&mut pipeline_point, rot);
+      //z_rotate(&mut pipeline_point, rot);
 
       let dac_point = pipeline_to_dac(&pipeline_point);
       buf.push(dac_point);
@@ -121,6 +121,7 @@ fn main() {
   }).expect("Streaming to the DAC is broken.");
 }
 
+// TODO: These definitely belong in beam.
 fn x_rotate(point: &mut PipelinePoint, theta: f32) {
   let y = point.y * theta.sin();
   point.y = y;
@@ -138,14 +139,32 @@ fn z_rotate(point: &mut PipelinePoint, theta: f32) {
   point.y = y;
 }
 
-fn get_rotation() -> f32 {
+// TODO: Time period functions would be good for beam.
+fn get_rotation(second_duration: i32) -> f32 {
+  // NB: second_duration must be in [1, 60].
   const TWO_PI: f32 = PI * 2.0f32;
 
   let now = time::now();
+
+  let tm_part_sec = now.tm_sec % second_duration; // NB: Defines the period.
+
   let second_fraction = now.tm_nsec as f32 / 1_000_000_000.0;
 
+  let pt = (tm_part_sec - 1) as f32 + second_fraction; // NB: Minus one second!
+
+  let sec_fraction = pt / second_duration as f32;
+
+  sec_fraction * TWO_PI
+}
+
+fn get_simple_rotation() -> f32 {
+  const TWO_PI: f32 = PI * 2.0f32;
+  let now = time::now();
+  let second_fraction = now.tm_nsec as f32 / 1_000_000_000.0;
+  //let minute_fraction = now.tm_sec as f32 / 60.0;
   second_fraction * TWO_PI
 }
+
 
 fn invert_x(x_coordinate: i16) -> i16 {
   // Compensate for flipped x-coordinate plane.
