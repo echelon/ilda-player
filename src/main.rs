@@ -108,6 +108,9 @@ fn main() {
       let mut pipeline_point = simple_point.into_pipeline_pt();
 
       let rot = get_rotation();
+
+      //x_rotate(&mut pipeline_point, rot);
+      //y_rotate(&mut pipeline_point, rot);
       z_rotate(&mut pipeline_point, rot);
 
       let dac_point = pipeline_to_dac(&pipeline_point);
@@ -116,6 +119,16 @@ fn main() {
 
     buf
   }).expect("Streaming to the DAC is broken.");
+}
+
+fn x_rotate(point: &mut PipelinePoint, theta: f32) {
+  let y = point.y * theta.sin();
+  point.y = y;
+}
+
+fn y_rotate(point: &mut PipelinePoint, theta: f32) {
+  let x = point.x * theta.sin();
+  point.x = x;
 }
 
 fn z_rotate(point: &mut PipelinePoint, theta: f32) {
