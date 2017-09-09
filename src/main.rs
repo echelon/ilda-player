@@ -3,17 +3,13 @@
 //! ilda-player is a program that plays ILDA laser projection files on laser
 //! projector DACs.
 
-#![deny(missing_docs)]
-#![deny(unreachable_patterns)]
-#![deny(unused_extern_crates)]
-#![deny(unused_imports)]
-#![deny(unused_qualifications)]
-
 extern crate argparse;
 extern crate ilda;
 extern crate lase;
 extern crate point;
 extern crate time;
+
+mod letters;
 
 use argparse::ArgumentParser;
 use argparse::{Store, StoreTrue};
@@ -23,6 +19,7 @@ use lase::tools::find_first_etherdream_dac;
 use point::PipelinePoint;
 use point::SimplePoint;
 use std::f32::consts::PI;
+use letters::letter_a;
 
 fn main() {
   let mut filename = String::new();
@@ -59,12 +56,23 @@ fn main() {
   let mut current_point = 0;
   let mut frame_repeat_count = 0;
 
+  let mut letter = letter_a();
+
+  let mut current_index = 0;
+
   dac.play_function(move |num_points: u16| {
     let num_points = num_points as usize;
     let mut buf = Vec::new();
 
     while buf.len() < num_points {
-      let frame = match animation.get_frame(current_frame) {
+
+      let pipeline_point = letter.get(current_index).unwrap();
+      current_index = (current_index + 1) % letter.len();
+
+      let dac_point = pipeline_to_dac(&pipeline_point);
+      buf.push(dac_point);
+
+      /*let frame = match animation.get_frame(current_frame) {
         Some(frame) => frame,
         None => {
           // End of animation
@@ -114,7 +122,7 @@ fn main() {
       //z_rotate(&mut pipeline_point, rot);
 
       let dac_point = pipeline_to_dac(&pipeline_point);
-      buf.push(dac_point);
+      buf.push(dac_point);*/
     }
 
     buf
@@ -138,6 +146,12 @@ fn z_rotate(point: &mut PipelinePoint, theta: f32) {
   point.x = x;
   point.y = y;
 }
+
+/*
+TODO: Perspective transform
+- https://gamedev.stackexchange.com/questions/44751/2d-camera-perspective-projection-from-3d-coordinates-how
+- https://stackoverflow.com/questions/14177744/how-does-perspective-transformation-work-in-pil
+*/
 
 // TODO: Time period functions would be good for beam.
 fn get_rotation(second_duration: i32) -> f32 {
