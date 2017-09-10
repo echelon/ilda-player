@@ -19,7 +19,6 @@ use lase::tools::find_first_etherdream_dac;
 use point::PipelinePoint;
 use point::SimplePoint;
 use std::f32::consts::PI;
-use letters::letter_a;
 
 fn main() {
   let mut filename = String::new();
@@ -44,9 +43,9 @@ fn main() {
 
   let repeat_frames = frame_repeat_number != 0;
 
-  println!("Reading ILDA file... {}", filename);
+  //println!("Reading ILDA file... {}", filename);
 
-  let animation = Animation::read_file(&filename).expect("File should load.");
+  //let animation = Animation::read_file(&filename).expect("File should load.");
 
   println!("Searching for EtherDream DAC...");
 
@@ -56,7 +55,17 @@ fn main() {
   let mut current_point = 0;
   let mut frame_repeat_count = 0;
 
-  let mut letter = letter_a();
+  let mut letter = letters::letter_n();
+
+  let mut letters : Vec<Vec<PipelinePoint>> = Vec::new();
+
+  letters.push(letters::letter_a());
+  letters.push(letters::letter_t());
+  letters.push(letters::letter_l());
+  letters.push(letters::letter_a());
+  letters.push(letters::letter_n());
+  letters.push(letters::letter_t());
+  letters.push(letters::letter_a());
 
   let mut current_index = 0;
 
