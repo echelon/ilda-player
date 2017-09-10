@@ -38,12 +38,12 @@ pub fn center_shape(points: &mut Vec<PipelinePoint>) {
     pt.x -= avg_x;
     pt.y -= avg_y;
 
-    pt.x *= 100.0 * -1.0;
-    pt.y *= 100.0 * -1.0;
+    pt.x *= 50.0 * -1.0;
+    pt.y *= 50.0 * -1.0;
 
-    pt.r = COLOR_MAX_F / 4.0;
+    /*pt.r = COLOR_MAX_F / 4.0;
     pt.g = COLOR_MAX_F / 4.0;
-    pt.b = COLOR_MAX_F / 4.0;
+    pt.b = COLOR_MAX_F / 4.0;*/
   }
 }
 

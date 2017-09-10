@@ -153,7 +153,7 @@ fn main() {
       let rot = get_rotation(2);
 
       //x_rotate(&mut pipeline_point, rot);
-      //y_rotate(&mut pipeline_point, rot);
+      y_rotate(&mut pipeline_point, rot);
       //z_rotate(&mut pipeline_point, rot);
 
       let dac_point = pipeline_to_dac(&pipeline_point);
