@@ -29,8 +29,8 @@ fn main() {
     let mut parser = ArgumentParser::new();
 
     parser.set_description("ILDA laser projection file player.");
-    parser.refer(&mut filename)
-        .add_argument("filename", Store, "ILDA file to load");
+    //parser.refer(&mut filename)
+    //    .add_argument("filename", Store, "ILDA file to load");
     parser.refer(&mut show_blanking)
         .add_option(&["-b", "--show-blanking"], StoreTrue,
             "Show the blanking points");
@@ -67,6 +67,31 @@ fn main() {
   letters.push(letters::letter_t());
   letters.push(letters::letter_a());
 
+  letters.push(letters::letter_b());
+  letters.push(letters::letter_e());
+  letters.push(letters::letter_l());
+  letters.push(letters::letter_t());
+  letters.push(letters::letter_l());
+  letters.push(letters::letter_i());
+  letters.push(letters::letter_n());
+  letters.push(letters::letter_e());
+
+  letters.push(letters::letter_l());
+  letters.push(letters::letter_a());
+  letters.push(letters::letter_n());
+  letters.push(letters::letter_t());
+  letters.push(letters::letter_e());
+  letters.push(letters::letter_r());
+  letters.push(letters::letter_n());
+
+  letters.push(letters::letter_p());
+  letters.push(letters::letter_a());
+  letters.push(letters::letter_r());
+  letters.push(letters::letter_a());
+  letters.push(letters::letter_d());
+  letters.push(letters::letter_e());
+
+
   let mut current_index = 0;
 
   dac.play_function(move |num_points: u16| {
@@ -75,13 +100,14 @@ fn main() {
 
     while buf.len() < num_points {
 
+      /* ///// OLD LETTER CODE /////
       let pipeline_point = letter.get(current_index).unwrap();
       current_index = (current_index + 1) % letter.len();
 
       let dac_point = pipeline_to_dac(&pipeline_point);
-      buf.push(dac_point);
+      buf.push(dac_point);*/
 
-      /*let frame = match animation.get_frame(current_frame) {
+      let frame = match letters.get(current_frame) {
         Some(frame) => frame,
         None => {
           // End of animation
@@ -92,7 +118,7 @@ fn main() {
         }
       };
 
-      let point = match frame.get_point(current_point) {
+      let point = match frame.get(current_point) {
         Some(point) => point,
         None => {
           // End of frame
@@ -110,7 +136,7 @@ fn main() {
 
       current_point += 1;
 
-      let simple_point = if point.is_blank && !show_blanking {
+      /*let simple_point = if point.is_blank && !show_blanking {
         SimplePoint::xy_blank(invert_x(point.x), point.y)
       } else {
         // The DAC supports a wider colorspace than ILDA.
@@ -120,18 +146,18 @@ fn main() {
           expand(point.r),
           expand(point.g),
           expand(point.b))
-      };
+      };*/
 
-      let mut pipeline_point = simple_point.into_pipeline_pt();
+      let mut pipeline_point = point.clone();
 
-      let rot = get_rotation(4);
+      let rot = get_rotation(2);
 
       //x_rotate(&mut pipeline_point, rot);
-      y_rotate(&mut pipeline_point, rot);
+      //y_rotate(&mut pipeline_point, rot);
       //z_rotate(&mut pipeline_point, rot);
 
       let dac_point = pipeline_to_dac(&pipeline_point);
-      buf.push(dac_point);*/
+      buf.push(dac_point);
     }
 
     buf
